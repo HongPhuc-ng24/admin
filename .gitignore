@@ -1,0 +1,6 @@
+*.log
+node_modules/
+.data.json/
+.db/
+.env
+.vscode/

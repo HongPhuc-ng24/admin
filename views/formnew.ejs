@@ -1,0 +1,46 @@
+<%- include('layouts/header'); %>
+<main>
+
+    <form action="/users/create" method="post" class="max-w-md mx-auto p-4 border rounded shadow-lg bg-light">
+       <div class="mb-4">
+            <label for="floating_name" class="form-label">Name</label>
+            <input type="text" name="name" id="floating_name" 
+                class="form-control" 
+                placeholder="Enter your name" required />
+        </div> 
+        <div class="mb-4">
+            <label for="floating_email" class="form-label">Email</label>
+            <input type="email" name="email" id="floating_email" 
+                class="form-control" 
+                placeholder="Enter your email" required />
+        </div>
+        
+        <!-- Day input field (date picker) -->
+        <div class="mb-3">
+            <label for="price" class="form-label">Day</label>
+            <input type="number" id="price" name="price" class="form-control" required>
+        </div>
+
+        <!-- Location input field -->
+        <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" id="location" name="location" class="form-control" required>
+        </div>
+
+        <!-- Price input field -->
+        <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input type="number" id="price" name="price" class="form-control" required>
+        </div>
+
+        <!-- Time input field (datetime picker) -->
+        <div class="mb-3">
+            <label for="time" class="form-label">Time</label>
+            <input type="datetime-local" id="time" name="time" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Submit</button>
+    </form>
+
+</main>
+<%- include('layouts/footer'); %>
