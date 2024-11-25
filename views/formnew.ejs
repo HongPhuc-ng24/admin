@@ -1,0 +1,78 @@
+<%- include('layouts/header'); %>
+<main class="container mt-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white text-center">
+            <h2>Create New User</h2>
+        </div>
+        <div class="card-body p-4">
+            <form action="/users/create" method="post" class="needs-validation" novalidate>
+                <div class="mb-4">
+                    <label for="floating_name" class="form-label fw-bold">Name</label>
+                    <input type="text" name="name" id="floating_name" 
+                        class="form-control rounded-pill" 
+                        placeholder="Enter your name" required />
+                    <div class="invalid-feedback">
+                        Please enter your name.
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="floating_email" class="form-label fw-bold">Email</label>
+                    <input type="email" name="email" id="floating_email" 
+                        class="form-control rounded-pill" 
+                        placeholder="Enter your email" required />
+                    <div class="invalid-feedback">
+                        Please enter a valid email.
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="day" class="form-label fw-bold">Day</label>
+                    <input type="number" id="day" name="day" 
+                        class="form-control rounded-pill" 
+                        placeholder="Enter the day" required />
+                    <div class="invalid-feedback">
+                        Please enter the day.
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="location" class="form-label fw-bold">Location</label>
+                    <input type="text" id="location" name="location" 
+                        class="form-control rounded-pill" 
+                        placeholder="Enter the location" required />
+                    <div class="invalid-feedback">
+                        Please enter the location.
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="image" class="form-label fw-bold">Image URL</label>
+                    <input type="url" id="image" name="image" 
+                        class="form-control rounded-pill" 
+                        placeholder="Enter image URL" required />
+                    <div class="invalid-feedback">
+                        Please provide a valid URL.
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="price" class="form-label fw-bold">Price</label>
+                    <input type="number" id="price" name="price" 
+                        class="form-control rounded-pill" 
+                        placeholder="Enter the price" required />
+                    <div class="invalid-feedback">
+                        Please enter the price.
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="time" class="form-label fw-bold">Time</label>
+                    <input type="datetime-local" id="time" name="time" 
+                        class="form-control rounded-pill" required />
+                    <div class="invalid-feedback">
+                        Please select a valid time.
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill">
+                    Submit
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+<%- include('layouts/footer'); %>

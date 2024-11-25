@@ -1,0 +1,44 @@
+<%- include('layouts/header'); %>
+<main>
+
+  <div class="container my-5">
+    <h1 class="mb-4 text-center"><%= title %></h1>
+   
+  </div>
+
+  <div class="container">
+    <form action="/users/update/<%= user._id %>" method="POST">
+      <div class="mb-4">
+        <label for="image" class="form-label">Image</label>
+        <input type="url" name="image" id="floating_image" class="form-control" value="<%= user.image %>" required />
+      </div>
+      <div class="mb-4">
+        <label for="floating_name" class="form-label">Name</label>
+        <input type="text" name="name" id="floating_name" class="form-control" value="<%= user.name %>" required />
+      </div>
+      <div class="mb-4">
+        <label for="floating_email" class="form-label">Email</label>
+        <input type="email" name="email" id="floating_email" class="form-control" value="<%= user.email %>" required />
+      </div>
+      <div class="mb-4">
+        <label for="floating_day" class="form-label">Day</label>
+        <input type="text" name="day" id="floating_day" class="form-control" value="<%= user.day %>" required />
+      </div>
+      <div class="mb-4">
+        <label for="floating_location" class="form-label">Location</label>
+        <input type="text" name="location" id="floating_location" class="form-control" value="<%= user.location %>" required />
+      </div>
+      <div class="mb-4">
+        <label for="floating_price" class="form-label">Price</label>
+        <input type="number" name="price" id="floating_price" class="form-control" value="<%= user.price %>" required />
+      </div>
+      <div class="mb-4">
+        <label for="floating_time" class="form-label">Time</label>
+        <input type="text" name="time" id="floating_time" class="form-control" value="<%= user.time %>" required />
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
+
+</main>
+<%- include('layouts/footer'); %>
