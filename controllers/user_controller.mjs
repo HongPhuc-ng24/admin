@@ -1,124 +1,130 @@
-import User from "../models/user.mjs";
+const User = require("../models/userModel");
 
-class UserController {
-  // Danh sách users (tìm kiếm nếu có query)
-  static async index(req, res) {
-    let q = req.query.q || "";
-    const re = new RegExp(q, "i"); // Tìm kiếm không phân biệt hoa thường
-    try {
-      const users = q
-        ? await User.find({ $or: [{ name: re }, { email: re }] })
-        : await User.find({});
-      res.render("user", { title: "User Management", users, q });
-    } catch (error) {
-      console.error("Error retrieving users:", error);
-      res.status(500).send("Error retrieving users");
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (err) {
+    console.log("Error fetching users:", err);
+    res.status(500).json({ message: "Error fetching users" });
+  }
+};
+
+exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
     }
-  }
 
-  // Hiển thị form tạo user mới
-  static async new(req, res) {
-    res.render("formnew", { title: "Create New User", error: null });
-  }
-  // Dat cho moi
-  static async new(req, res) {
-    res.render("formnew", { title: "Trip New" });
-  }
-  
-  static  async create(req, res) {
-    let { email, name, day, location, price, time, image }= req.body;
-    let user = await User.create({ email, name, day, location, price, time, image });
-    console.log(user);
-    
-    // Sau khi lưu, chuyển hướng về trang danh sách người dùng
-    if (user) {
-    res.redirect("/users");
-    } else {
-    res.render("formnew", { title: "Trip New" });
+    if (user.password !== password) {
+      return res.status(401).json({ message: "Invalid email or password" });
     }
+
+    res.json({
+      message: "Login successful",
+      user: {
+        id: user.id,
+        full_name: user.full_name,
+        email: user.email,
+        phone_number: user.phone_number,
+        address: user.address,
+        country: user.country,
+      },
+    });
+  } catch (err) {
+    console.log("Error logging in:", err);
+    res.status(500).json({ message: "Error logging in" });
   }
+};
 
+exports.createUser = async (req, res) => {
+  const { id, full_name, email, password, phone_number, address, country } =
+    req.body;
 
-  
-  // Hiển thị form chỉnh sửa user
-  static async edit(req, res) {
-    let id = req.params.id;
-    try {
-      const user = await User.findById(id);
-      if (!user) {
-        return res.status(404).send("User không tồn tại.");
-      }
-      res.render("useredit", { title: "Edit User", user });
-    } catch (error) {
-      console.error("Error retrieving user:", error);
-      res.status(500).send("Error retrieving user data");
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already in use" });
     }
-  }
 
-  // Cập nhật đặt chỗ
-  static async update(req, res) {
-    let id = req.params.id;
-    let { email, name, day, location, price, time, image } = req.body;
-  
-    try {
-      // Cập nhật trip trong cơ sở dữ liệu
-      let updatedUser= await User.findByIdAndUpdate(
-        id,
-        { email, name, day, location, price, time, image },
-        { new: true } // Trả về document đã được cập nhật
-      );
-  
-      if (!updatedUser) {
-        return res.status(404).send("Trips không tồn tại.");
-      }
-  
-      // Sau khi cập nhật, chuyển hướng về trang danh sách trip
-      res.redirect("/users");
-    } catch (error) {
-      console.error('Lỗi khi cập nhật trip:', error);
-      res.status(500).send('Lỗi khi cập nhật dữ liệu trip');
+    const newUser = new User({
+      id,
+      full_name,
+      email,
+      password,
+      phone_number,
+      address,
+      country,
+    });
+
+    await newUser.save();
+
+    res.status(201).json({
+      message: "User created successfully",
+      user: {
+        id: newUser.id,
+        full_name: newUser.full_name,
+        email: newUser.email,
+        phone_number: newUser.phone_number,
+        address: newUser.address,
+        country: newUser.country,
+      },
+    });
+  } catch (err) {
+    console.log("Error creating user:", err);
+    res.status(500).json({ message: "Error creating user" });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  const { id } = req.params;
+  const { full_name, email, password, phone_number, address, country } =
+    req.body;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { full_name, email, password, phone_number, address, country },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    res.json({
+      message: "User updated successfully",
+      user: {
+        id: updatedUser.id,
+        full_name: updatedUser.full_name,
+        email: updatedUser.email,
+        phone_number: updatedUser.phone_number,
+        address: updatedUser.address,
+        country: updatedUser.country,
+      },
+    });
+  } catch (err) {
+    console.log("Error updating user:", err);
+    res.status(500).json({ message: "Error updating user" });
   }
+};
 
-  // // Cập nhật thông tin user
-  // static async update(req, res) {
-  //   let id = req.params.id;
-  //   const { email, name, day, location, price, time, image } = req.body;
+exports.deleteUser = async (req, res) => {
+  const { id } = req.params;
 
-  //   try {
-  //     const updatedUser = await User.findByIdAndUpdate(
-  //       id,
-  //       { email, name, day, location, price, time, image },
-  //       { new: true } // Trả về document đã được cập nhật
-  //     );
+  try {
+    const deletedUser = await User.findByIdAndDelete(id);
 
-  //     if (!updatedUser) {
-  //       return res.status(404).send("User không tồn tại.");
-  //     }
-
-  //     res.redirect("/users"); // Chuyển hướng về trang danh sách user
-  //   } catch (error) {
-  //     console.error("Error updating user:", error);
-  //     res.status(500).send("Error updating user data");
-  //   }
-  // }
-
-  // Xóa user
-  static async delete(req, res) {
-    let id = req.params.id;
-    try {
-      const { deletedCount } = await User.deleteOne({ _id: id });
-      if (deletedCount === 0) {
-        console.log("User not deleted!");
-      } else {
-        console.log("User deleted successfully!");
-      }
-      res.redirect("/users");
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      res.status(500).send("Error deleting user");
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
     }
-  }
-}
 
-export default UserController;
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    console.log("Error deleting user:", err);
+    res.status(500).json({ message: "Error deleting user" });
+  }
+};
